@@ -1,9 +1,8 @@
 /* SPDX-License-Identifier: GPL-2.0+ */
 /*
  * (C) Copyright 2009-2014
- * Gerald Kerma <dreagle@doukki.net>
  * Marvell Semiconductor <www.marvell.com>
- * Written-by: Prafulla Wadaskar <prafulla@marvell.com>
+ * Written-by: Guillaume Girou <git@modoki.ovh>
  */
 
 #ifndef _CONFIG_IX4_200D_H
@@ -29,16 +28,17 @@
  */
 
 #define CONFIG_EXTRA_ENV_SETTINGS	"x_bootargs=console"	\
-	"=ttyS0,115200 mtdparts="CONFIG_MTDPARTS_DEFAULT	\
-	"x_bootcmd_kernel=nand read 0x6400000 0x100000 0x400000\0" \
-	"x_bootcmd_usb=usb start\0" \
-	"x_bootargs_root=root=/dev/mtdblock3 rw rootfstype=jffs2\0"
+	"=ttyS0,115200 mtdparts=${mtdparts}\0"	\
+	"x_bootcmd_kernel=ext4load usb 0:1 ${loadaddr} /boot/uImage\0" \
+	"x_bootcmd_usb=usb start; ext4load usb 0:1 ${loadaddr} uEnv.txt; env import -t ${loadaddr} ${filesize}\0" \
+	"x_bootargs_root=root=/dev/disk/by-path/platform-f1050000.ehci-usb-0:1.2:1.0-scsi-0:0:0:0-part1 rw rootfstype=ext2\0" \
+	"mtdparts="CONFIG_MTDPARTS_DEFAULT"\0"
 
 /*
  * Ethernet Driver configuration
  */
 #ifdef CONFIG_CMD_NET
-#define CONFIG_MVGBE_PORTS	{1, 0}	/* enable port 0 only */
+#define CONFIG_MVGBE_PORTS	{1, 1}	/* enable both ports */
 #define CONFIG_PHY_BASE_ADR	0
 #endif /* CONFIG_CMD_NET */
 
