@@ -29,9 +29,9 @@
 
 #define CONFIG_EXTRA_ENV_SETTINGS	"x_bootargs=console"	\
 	"=ttyS0,115200 mtdparts=${mtdparts}\0"	\
-	"x_bootcmd_kernel=ext4load usb 0:1 ${loadaddr} /boot/uImage\0" \
+	"x_bootcmd_kernel=ubi part rootfs && ubifsmount ubi:rootfs && ubifsload ${loadaddr} /uImage\0" \
 	"x_bootcmd_usb=usb start; ext4load usb 0:1 ${loadaddr} uEnv.txt; env import -t ${loadaddr} ${filesize}\0" \
-	"x_bootargs_root=root=/dev/disk/by-path/platform-f1050000.ehci-usb-0:1.2:1.0-scsi-0:0:0:0-part1 rw rootfstype=ext2\0" \
+	"x_bootargs_root=root=/dev/sda1 rw rootfstype=ext4\0" \
 	"mtdparts="CONFIG_MTDPARTS_DEFAULT"\0"
 
 /*
