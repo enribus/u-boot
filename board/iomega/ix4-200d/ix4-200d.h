@@ -8,10 +8,10 @@
 #ifndef __IX4_200D_H
 #define __IX4_200D_H
 
-#define IX4_200D_OE_LOW		(~(0))
-#define IX4_200D_OE_HIGH		(~(0))
-#define IX4_200D_OE_VAL_LOW		(1 << 29)	/* USB_PWEN low */
-#define IX4_200D_OE_VAL_HIGH		(1 << 17)	/* LED pin high */
+#define IX4_200D_OE_LOW		0xefff0f7f
+#define IX4_200D_OE_HIGH		0xfffec003
+#define IX4_200D_OE_VAL_LOW		0x1000d080
+#define IX4_200D_OE_VAL_HIGH		0x0001000c
 
 /* PHY related */
 #define MV88E1116_LED_FCTRL_REG		10
