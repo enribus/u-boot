@@ -29,26 +29,26 @@
 		stdout-path = &uart0;
 	};
 
-	// gpio_poweroff {
-	// 	compatible = "gpio-poweroff";
-	// 	gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;		/* GPIO1-16 is MPP48 */
-	// };
+	gpio_poweroff {
+		compatible = "gpio-poweroff";
+		gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+	};
 
-	// gpio_keys {
-	// 	compatible = "gpio-keys";
+	gpio_keys {
+		compatible = "gpio-keys";
 
-	// 	reset {
-	// 		label = "Reset";
-	// 		linux,code = <KEY_POWER>;
-	// 		gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
-	// 	};
+		reset {
+			label = "Reset";
+			linux,code = <KEY_POWER>;
+			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
+		};
 
-	// 	button {
-	// 		label = "Power";
-	// 		linux,code = <KEY_SLEEP>;
-	// 		gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;	/* GPIO1-17 is MPP49 */
-	// 	};
-	// };
+		button {
+			label = "Power";
+			linux,code = <KEY_SLEEP>;
+			gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;	/* GPIO1-17 is MPP49 */
+		};
+	};
 
 	ocp@f1000000 {
 		pinctrl: pin-controller@10000 {
