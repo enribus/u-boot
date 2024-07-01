@@ -1,0 +1,278 @@
+// SPDX-License-Identifier: GPL-2.0+
+/*
+ * Device Tree file for Iomega ix4-200d
+ *
+ * Copyright (c) 2020, 1000001101000
+ * Copyright (c) 2016, bodhi <mibodhi@gmail.com>
+ * Copyright (c) 2015, DaMacc
+ *
+*/
+
+/dts-v1/;
+
+#include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
+#include "kirkwood.dtsi"
+#include "kirkwood-6281.dtsi"
+
+/ {
+	model = "Iomega ix4-200d";
+	compatible = "marvell,rd88f6281-a", "marvell,rd88f6281", "marvell,kirkwood-88f6281", "marvell,kirkwood";
+
+	memory {
+		device_type = "memory";
+		reg = <0x00000000 0x20000000>; /* 512MB */
+	};
+
+	chosen {
+		bootargs = "console=ttyS0,115200n8 earlyprintk";
+		stdout-path = &uart0;
+	};
+
+	gpio_poweroff {
+		compatible = "gpio-poweroff";
+		gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+	};
+
+	gpio_keys {
+		compatible = "gpio-keys";
+
+		reset {
+			label = "Reset";
+			linux,code = <KEY_POWER>;
+			gpios = <&gpio0 29 GPIO_ACTIVE_LOW>;
+		};
+
+		button {
+			label = "Power";
+			linux,code = <KEY_SLEEP>;
+			gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;	/* GPIO1-17 is MPP49 */
+		};
+	};
+
+	ocp@f1000000 {
+		pinctrl: pin-controller@10000 {
+			gpio_pin: gpio-pin {
+				marvell,pins = "mpp13", "mpp14", "mpp15", "mpp16",
+								 "mpp28", "mpp29", "mpp36", "mpp36",
+								 "mpp37", "mpp38", "mpp39", "mpp40",
+								 "mpp41", "mpp42", "mpp43", "mpp44",
+								 "mpp45", "mpp46", "mpp47", "mpp48",
+								 "mpp49";
+				marvell,function = "gpio";
+			};
+
+			gpo_pin: gpo-pin {
+				marvell,pins = "mpp7", "mpp12";
+				marvell,function = "gpo";
+			};
+
+			sata0_pin: sata0-pin {
+				marvell,pins = "mpp17";
+				marvell,function = "sata0";
+			};
+
+			spi_pin1: spi-pin1 {
+				marvell,pins = "mpp12";
+				marvell,function = "gpio";
+			};
+
+			spi_pin2: spi-pin2 {
+				marvell,pins = "mpp13";
+				marvell,function = "gpio";
+			};
+
+			select_button_pin: select-button-pin {
+				marvell,pins = "mpp16";
+				marvell,function = "gpio";
+			};
+
+			reset_button_pin: reset-button-pin {
+				marvell,pins = "mpp29";
+				marvell,function = "gpio";
+			};
+
+			scroll_button_pin: scroll-button-pin {
+				marvell,pins = "mpp47";
+				marvell,function = "gpio";
+			};
+
+			power_button_pin: power-button-pin {
+				marvell,pins = "mpp49";
+				marvell,function = "gpio";
+			};
+		};
+
+		// spi3 {
+		// 	compatible = "spi-gpio";
+		// 	status = "okay";
+		// 	gpio-sck = <&gpio0 13 GPIO_ACTIVE_LOW>;
+		// 	gpio-mosi = <&gpio0 12 GPIO_ACTIVE_LOW>;
+		// 	cs-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
+		// 	num-chipselects = <1>;
+		// 	#address-cells = <1>;
+		// 	#size-cells = <0>;
+
+		// 	// spidev@0{
+		// 	// 		compatible = "spidev";
+		// 	// 		reg = <0>;
+		// 	// 		spi-max-frequency = <100000>;
+		// 	// };
+
+		// 	gpio_spi: gpio_spi@0 {
+		// 		compatible = "fairchild,74hc595";
+		// 		gpio-controller;
+		// 		#gpio-cells = <2>;
+		// 		reg = <0>;
+		// 		registers-number = <1>;
+		// 		spi-max-frequency = <100000>;
+		// 	};
+		// };
+
+		// gpio-leds {
+		// 	compatible = "gpio-leds";
+
+		// 	//top white, or red?
+		// 	led5 {
+		// 		label = "led5";
+		// 		gpios = <&gpio_spi 4 GPIO_ACTIVE_LOW>;
+		// 		default-state = "off";
+		// 	};
+
+		// 	led6 {
+		// 		label = "led6";
+		// 		gpios = <&gpio_spi 5 GPIO_ACTIVE_LOW>;
+		// 		default-state = "off";
+		// 	};
+
+		// 	led8 {
+		// 		label = "led8";
+		// 		gpios = <&gpio_spi 7 GPIO_ACTIVE_HIGH>;
+		// 		default-state = "on";
+		// 	};
+		// };
+
+		gpio-keys {
+			compatible = "gpio-keys";
+			pinctrl-0 = <&power_button_pin &select_button_pin &scroll_button_pin &reset_button_pin>;
+			pinctrl-names = "default";
+
+			select-button {
+				label = "Select Button";
+				linux,code = <BTN_SELECT>;
+				gpios = <&gpio0 16 GPIO_ACTIVE_HIGH>;
+			};
+
+			reset-button {
+				label = "Reset Button";
+				linux,code = <KEY_RESTART>;
+				gpios = <&gpio0 29 GPIO_ACTIVE_HIGH>;
+			};
+
+			scroll-button {
+				label = "Scroll Button";
+				linux,code = <KEY_SCROLLDOWN>;
+				gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;
+			};
+
+			power-button {
+				label = "Power Button";
+				linux,code = <KEY_POWER>;
+				gpios = <&gpio1 17 GPIO_ACTIVE_LOW>;
+			};
+		};
+
+		i2c@11000 {
+			status = "okay";
+
+			adt7473@2e {
+				compatible = "adi,adt7473";
+				reg = <0x2e>;
+			};
+
+			pca9534: gpio@20 {
+				compatible = "nxp,pca9534";
+				reg = <0x20>;
+				gpio-controller; /* IRQ not connected */
+				#gpio-cells = <2>;
+				// gpio-line-names = "autopower", "", "", "",
+				// 		  "", "", "", "";
+
+				// autopower {
+				// 	gpio-hog;
+				// 	gpios = <0 GPIO_ACTIVE_HIGH>; // Send 254 to disable
+				// 	output-high;
+				// 	line-name = "autopower";
+				// };
+			};
+		};
+
+		serial@12000 {
+			status = "okay";
+		};
+
+		sata@80000 {
+			status = "okay";
+			// nr-ports = <4>;
+			nr-ports = <2>;
+		};
+
+	};
+};
+
+&nand {
+	status = "okay";
+
+	partition@0 {
+		label = "u-boot";
+		reg = <0x0000000 0x100000>;
+		read-only;
+	};
+
+	partition@a0000 {
+		label = "env";
+		reg = <0xE0000 0x20000>;
+		read-only;
+	};
+
+	partition@100000 {
+		label = "rootfs";
+		reg = <0x100000 0x1F00000>;
+	};
+};
+
+&mdio {
+	status = "okay";
+
+	ethphy0: ethernet-phy@8 {
+		device_type = "ethernet-phy";
+		reg = <8>;
+	};
+
+	ethphy1: ethernet-phy@9 {
+		device_type = "ethernet-phy";
+		reg = <9>;
+	};
+};
+
+&eth0 {
+	status = "okay";
+	ethernet0-port@0 {
+		phy-handle = <&ethphy0>;
+	};
+};
+
+&eth1 {
+	status = "okay";
+	ethernet1-port@0 {
+		phy-handle = <&ethphy1>;
+	};
+};
+
+&pciec {
+	status = "okay";
+};
+
+&pcie0 {
+	status = "okay";
+};

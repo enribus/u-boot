@@ -58,6 +58,8 @@ dtb-$(CONFIG_ARCH_KIRKWOOD) += \
 	kirkwood-ib62x0.dtb \
 	kirkwood-iconnect.dtb \
 	kirkwood-is2.dtb \
+	kirkwood-ix4-200d.dts \
+	kirkwood-km_kirkwood.dtb \
 	kirkwood-lsxhl.dtb \
 	kirkwood-lschlv2.dtb \
 	kirkwood-net2big.dtb \
