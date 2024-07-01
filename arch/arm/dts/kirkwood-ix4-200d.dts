@@ -54,6 +54,7 @@
 		pinctrl: pin-controller@10000 {
 			gpio_pin: gpio-pin {
 				marvell,pins = "mpp13", "mpp14", "mpp15", "mpp16",
+								 "mpp20", "mpp21",
 								 "mpp28", "mpp29", "mpp36", "mpp36",
 								 "mpp37", "mpp38", "mpp39", "mpp40",
 								 "mpp41", "mpp42", "mpp43", "mpp44",
@@ -67,9 +68,17 @@
 				marvell,function = "gpo";
 			};
 
+			// SATA fixes as seen in kernel patch
+			// https://github.com/pepaslabs/bodhi-kirkwood-kernel-mirror/blob/master/linux-5.4.2-kirkwood-tld-1.patch
+
 			sata0_pin: sata0-pin {
-				marvell,pins = "mpp17";
+				marvell,pins = "mpp20";
 				marvell,function = "sata0";
+			};
+
+			sata1_pin: sata1-pin {
+				marvell,pins = "mpp21";
+				marvell,function = "sata1";
 			};
 
 			spi_pin1: spi-pin1 {
@@ -102,55 +111,6 @@
 				marvell,function = "gpio";
 			};
 		};
-
-		// spi3 {
-		// 	compatible = "spi-gpio";
-		// 	status = "okay";
-		// 	gpio-sck = <&gpio0 13 GPIO_ACTIVE_LOW>;
-		// 	gpio-mosi = <&gpio0 12 GPIO_ACTIVE_LOW>;
-		// 	cs-gpios = <&gpio0 14 GPIO_ACTIVE_LOW>;
-		// 	num-chipselects = <1>;
-		// 	#address-cells = <1>;
-		// 	#size-cells = <0>;
-
-		// 	// spidev@0{
-		// 	// 		compatible = "spidev";
-		// 	// 		reg = <0>;
-		// 	// 		spi-max-frequency = <100000>;
-		// 	// };
-
-		// 	gpio_spi: gpio_spi@0 {
-		// 		compatible = "fairchild,74hc595";
-		// 		gpio-controller;
-		// 		#gpio-cells = <2>;
-		// 		reg = <0>;
-		// 		registers-number = <1>;
-		// 		spi-max-frequency = <100000>;
-		// 	};
-		// };
-
-		// gpio-leds {
-		// 	compatible = "gpio-leds";
-
-		// 	//top white, or red?
-		// 	led5 {
-		// 		label = "led5";
-		// 		gpios = <&gpio_spi 4 GPIO_ACTIVE_LOW>;
-		// 		default-state = "off";
-		// 	};
-
-		// 	led6 {
-		// 		label = "led6";
-		// 		gpios = <&gpio_spi 5 GPIO_ACTIVE_LOW>;
-		// 		default-state = "off";
-		// 	};
-
-		// 	led8 {
-		// 		label = "led8";
-		// 		gpios = <&gpio_spi 7 GPIO_ACTIVE_HIGH>;
-		// 		default-state = "on";
-		// 	};
-		// };
 
 		gpio-keys {
 			compatible = "gpio-keys";
@@ -213,7 +173,6 @@
 
 		sata@80000 {
 			status = "okay";
-			// nr-ports = <4>;
 			nr-ports = <2>;
 		};
 
@@ -225,13 +184,13 @@
 
 	partition@0 {
 		label = "u-boot";
-		reg = <0x0000000 0x100000>;
+		reg = <0x0000000 0x100000>; // 1MB
 		read-only;
 	};
 
 	partition@a0000 {
 		label = "env";
-		reg = <0xE0000 0x20000>;
+		reg = <0xE0000 0x20000>; // 64KB inside u-boot mtd0
 		read-only;
 	};
 
