@@ -183,9 +183,6 @@ ifeq ($(wildcard $(LDSCRIPT)),)
 $(error could not find linker script)
 endif
 
-config TEXT_BASE
-        default 0x0
-
 # Special flags for CPP when processing the linker script.
 # Pass the version down so we can handle backwards compatibility
 # on the fly.
